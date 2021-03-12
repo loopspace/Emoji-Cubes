@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8">
+<title>Emoji Dice</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js" integrity="sha512-90vH1Z83AJY9DmlWa8WkjkV79yfS2n2Oxhsi2dZbIv0nC4E6m5AbH8Nh156kkM7JePmqD6tcZsfad1ueoaovww==" crossorigin="anonymous"></script>
+<script src="dice.js"></script>
+<link href="style.css" media="all" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div id="container">
+<div id="dicediv">
+</div>
+</div>
+<div id="reload" class="invisible"><span>&#x21BB;</span></div>
+<div id="generate" class="invisible">
+<h4>Instructions</h4>
+<p>This webpage makes a reusable set of "story dice" from a given set of characters (including emoji).
+Type in the characters that you want to use and choose the number of dice in the form below.
+Then click on the <code>generate URL</code> button to get a re-usable URL for your dice.
+</p>
+<p>(<em>On a Windows machine, press the Windows key and <code>.</code> to get an emoji picker</em>)</p>
+<form id="emoji"></form>
+<ul>
+<li>Enter your emoji here: <input type="text" form="emoji" id="symbols"></input>
+<li>How many dice? <input type="number" form="emoji" id="ndice"></input>
+<li><button type="button" id="generatebtn" form="emoji" class="button">Generate URL</button><a id="url"></a>
+</ul>
+</div>
+</body>
+</html>

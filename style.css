@@ -1,0 +1,105 @@
+.dice {
+/* display: inline-block; */
+padding: .5em;
+margin: .5em;
+width: 1.5em;
+font-size: 400%;
+height: 1.5em;
+border-radius: .75em;
+border: solid 5px #354;
+background-color: #feb;
+display: flex;
+align-items: center;
+box-shadow: .2em .2em .2em grey;
+}
+
+.dice span {
+margin: auto;
+}
+
+.diceAnimate {
+animation-duration: 1s;
+animation-timing-function: cubic-bezier(0.2,-2,0.8,2);
+}
+
+.diceRotatem315Animation {
+	animation-name: diceRotatem315;
+}
+.diceRotatem135Animation {
+	animation-name: diceRotatem135;
+}
+.diceRotate135Animation {
+	animation-name: diceRotate135;
+}
+.diceRotate315Animation {
+	animation-name: diceRotate315;
+}
+
+@keyframes diceRotate135 {
+from {transform: scale(0) rotate(135deg);}
+to {transform: scale(1) rotate(0);}
+}
+
+@keyframes diceRotatem135 {
+from {transform: scale(0) rotate(-135deg);}
+to {transform: scale(1) rotate(0);}
+}
+
+@keyframes diceRotate315 {
+from {transform: scale(0) rotate(315deg);}
+to {transform: scale(1) rotate(0);}
+}
+
+@keyframes diceRotatem315 {
+from {transform: scale(0) rotate(-315deg);}
+to {transform: scale(1) rotate(0);}
+}
+
+
+
+#container {
+display: flex;
+justify-content: center;
+}
+
+#dicediv {
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+}
+
+#reload {
+position: fixed;
+top: 0;
+right: 0;
+display: flex;
+align-items: center;
+padding: .25em;
+margin: .25em;
+width: 1em;
+font-size: 300%;
+height: 1em;
+border-radius: .25em;
+border: solid 2px #354;
+}
+
+#generate {
+	font-size: 150%;
+	}
+
+#reload span {
+margin: auto;
+}
+
+.invisible {
+display: none !important;
+}
+
+.button {
+font-family: inherit;
+font-size: inherit;
+}
+
+#url {
+padding-left: 2em;
+}
