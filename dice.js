@@ -1,35 +1,82 @@
+const collections = {
+    math: "⁰¹²³⁴⁵⁶⁷⁸⁹¼⅓⅖⅙⅗⅔¾⅕⅘⅐⅞⅑⅜√∝∛≥≤<>+÷±⨉π⊃⊂⋂⋃01234567890",
+    faces: "😀😁😂🤣😃😄😅😆😉😊😋😎😍😘🥰😗😙😚☺🙂🤗🤩🤔🤨😐😑😶🙄😏😣😥😮🤐😯😪😫🥱😴😌😛😜😝🤤😒😓😔🙃😲☹🙁😖😞😤😢😭😦😧😩🤯😬😰😱🥵🥶😳🤪🥴😠🤬😷🤕🤢🤮🤧😇🥳🤠🤡🤫🤭🧐🤓",
+};
+
 function init() {
     const urlParams = new URLSearchParams(window.location.search);
-//    const urlParams = new URLSearchParams(window.location.hash);
-    const myParam = urlParams.get('symbols');
-    if (myParam == null) {
+    //	const urlParams = new URLSearchParams(window.location.hash);
+    const symbolString = urlParams.get('symbols');
+    const collection = urlParams.get('collection');
+    if (symbolString == null && !collections.hasOwnProperty(collection)) {
 	var gendiv = document.getElementById("generate");
 	gendiv.classList.remove("invisible");
 	var genbtn = document.getElementById("generatebtn");
 	genbtn.addEventListener("click", generateUrl);
     } else {
-	var symbols = myParam.split("--");
+	var symbols = [];
+	if (symbolString != null) {
+	    symbols = symbols.concat(paramToList(symbolString));
+	}
+	if (collections.hasOwnProperty(collection)) {
+	    symbols = symbols.concat(_.split(collections[collection],""));		
+	}
 	var ndice = urlParams.get('number');
 	if (ndice == null || ndice > symbols.length) ndice = symbols.length;
 	setDice(symbols,ndice);
+	var ctrls = document.getElementById("controls");
+	ctrls.classList.remove("invisible");
 	var reload = document.getElementById("reload");
-	reload.classList.remove("invisible");
-	reload.addEventListener("click", function() {setDice(symbols, ndice)});
+	reload.addEventListener("click", function(e) {btnAnimate(e.target); setDice(symbols, ndice)});
+	var edit = document.getElementById("edit");
+	edit.addEventListener("click", function(e) {btnAnimate(e.target); editDice(symbols, ndice)});
     }
 }
 
-function setDice(symbols, ndice) {
+function paramToList(s) {
+    var symbols = s.split("--");
+    var list = [];
+    var symbol;
+    for (var i = 0; i < symbols.length; i++) {
+	symbol = symbols[i].split("-");
+	symbol = symbol.map(function(c) {return String.fromCodePoint(parseInt(c,16))});
+	list.push(symbol.join(""));
+    }
+    return list;
+}
+
+function btnAnimate(btn) {
+    btn.parentNode.classList.add("controlAnimate");
+    window.setTimeout(function() {btn.parentNode.classList.remove("controlAnimate");},3000);
+}
+
+function editDice(symbols, ndice) {
+    var emoji = document.getElementById("symbols");
+    var ndicediv = document.getElementById("ndice");
+    var collection = document.getElementById("collection");
+    collection.value = "none";
+    ndicediv.value = ndice;
+    emoji.value = symbols.join("");
+    var gendiv = document.getElementById("generate");
+    gendiv.classList.remove("invisible");
+    var genbtn = document.getElementById("generatebtn");
+    genbtn.addEventListener("click", generateUrl);
+    var ctrls = document.getElementById("controls");
+    ctrls.classList.add("invisible");
+    var dicediv = document.getElementById("dicediv");
+    dicediv.innerHTML = '';
+}
+
+function setDice(listOfSymbols, ndice) {
     var dicediv = document.getElementById("dicediv");
     dicediv.innerHTML = '';
     var dice, dspan, etext, ucode;
-    shuffle(symbols);
+    symbols = shuffle(listOfSymbols);
     var emoji, rn;
     for (var i = 0; i < ndice; i++) {
 	dice = document.createElement("div");
 	dspan = document.createElement("span");
-	emoji = symbols[i].split("-");
-	emoji = emoji.map(function(c) {return String.fromCodePoint(parseInt(c,16))});
-	etext = document.createTextNode(emoji.join(""));
+	etext = document.createTextNode(symbols[i]);
 	dspan.append(etext);
 	dice.append(dspan);
 	dice.classList.add("dice");
@@ -51,27 +98,39 @@ function setDice(symbols, ndice) {
 function generateUrl() {
     var emoji = document.getElementById("symbols");
     var ndice = document.getElementById("ndice");
+    var collection = document.getElementById("collection");
     var qs = "?";
-    qs += "number=" + ndice.value + "&symbols=";
-    var symbols = _.split(emoji.value, "");
-    var symbol;
-    var codepts = [];
-    for (var i = 0; i < symbols.length; i++) {
-	symbol = [];
-	for (let cp of symbols[i]) {		
-	    symbol.push(cp.codePointAt(0).toString(16));
+    qs += "number=" + ndice.value;
+    var estring = emoji.value;
+    if (collection.value != "none") {
+	qs += "&collection=" + collection.value;
+    } 
+    if (estring != "") {
+	qs += "&symbols=";
+	var symbols = _.split(emoji.value, "");
+	var symbol;
+	var codepts = [];
+	for (var i = 0; i < symbols.length; i++) {
+	    symbol = [];
+	    for (let cp of symbols[i]) {		
+		symbol.push(cp.codePointAt(0).toString(16));
+	    }
+	    codepts.push(symbol.join("-"));
 	}
-	codepts.push(symbol.join("-"));
+	qs += codepts.join("--");
     }
-    qs += codepts.join("--");
     var urlsp = document.getElementById("url");
-    urlsp.setAttribute("href", window.location + qs);
-    urlsp.innerHTML = window.location + qs;
+    urlsp.setAttribute("href", window.location.pathname + qs);
+    urlsp.innerHTML = window.location.pathname + qs;
 }
 
 window.addEventListener("load", init);
 
-function shuffle(a) {
+function shuffle(b) {
+    var a = [];
+    for (var i = 0; i < b.length; i++) {
+	a.push(b[i]);
+    }
     var j;
     for (var i = a.length - 1; i > 0; i--) {
 	j = Math.floor(Math.random()*i);
@@ -79,4 +138,5 @@ function shuffle(a) {
 	    [a[i], a[j]] = [a[j], a[i]];
 	}
     }
+    return a;
 }

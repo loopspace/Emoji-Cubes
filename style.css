@@ -68,28 +68,46 @@ flex-wrap: wrap;
 justify-content: center;
 }
 
-#reload {
+#controls {
 position: fixed;
-top: 0;
+bottom: 0;
 right: 0;
 display: flex;
 align-items: center;
+justify-content: center;
+font-size: 300%;
+}
+
+.control {
+display: flex;
+align-items: center;
+justify-content: center;
 padding: .25em;
 margin: .25em;
-width: 1em;
-font-size: 300%;
-height: 1em;
+width: 1.3em;
+height: 1.3em;
 border-radius: .25em;
 border: solid 2px #354;
+}
+
+
+.control span {
+margin: auto;
+}
+
+.controlAnimate {
+animation: 1s controlAnimate;
+}
+
+@keyframes controlAnimate {
+0% { background-color: gray;}
+100% {background-color: white;}
 }
 
 #generate {
 	font-size: 150%;
 	}
 
-#reload span {
-margin: auto;
-}
 
 .invisible {
 display: none !important;
