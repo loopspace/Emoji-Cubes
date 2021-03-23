@@ -4,45 +4,57 @@ const collections = {
 };
 
 function init() {
-    const urlParams = new URLSearchParams(window.location.search);
-    //	const urlParams = new URLSearchParams(window.location.hash);
+	var urlParams;
+	if (window.location.protocol == "file:") {
+		urlParams = new URLSearchParams(window.location.hash);
+	} else {
+		urlParams = new URLSearchParams(window.location.search);
+	}
     const symbolString = urlParams.get('symbols');
     const collection = urlParams.get('collection');
-    if (symbolString == null && !collections.hasOwnProperty(collection)) {
-	var gendiv = document.getElementById("generate");
-	gendiv.classList.remove("invisible");
-	var genbtn = document.getElementById("generatebtn");
-	genbtn.addEventListener("click", generateUrl);
+	const words = urlParams.get('words');
+	var eelt = document.getElementById("symbols");
+    var nelt = document.getElementById("ndice");
+    var celt = document.getElementById("collection");
+	var welt = document.getElementById("words");
+    if (
+		symbolString == null
+		&&
+		words == null
+		&&
+		!collections.hasOwnProperty(collection)
+	) {
+		var gendiv = document.getElementById("generate");
+		gendiv.classList.remove("invisible");
+		var genbtn = document.getElementById("generatebtn");
+		genbtn.addEventListener("click", generateUrl);
     } else {
-	var symbols = [];
-	if (symbolString != null) {
-	    symbols = symbols.concat(paramToList(symbolString));
-	}
-	if (collections.hasOwnProperty(collection)) {
-	    symbols = symbols.concat(_.split(collections[collection],""));		
-	}
-	var ndice = urlParams.get('number');
-	if (ndice == null || ndice > symbols.length) ndice = symbols.length;
-	setDice(symbols,ndice);
-	var ctrls = document.getElementById("controls");
-	ctrls.classList.remove("invisible");
-	var reload = document.getElementById("reload");
-	reload.addEventListener("click", function(e) {btnAnimate(e.target); setDice(symbols, ndice)});
-	var edit = document.getElementById("edit");
-	edit.addEventListener("click", function(e) {btnAnimate(e.target); editDice(symbols, ndice)});
+		var symbols = [];
+		if (symbolString != null) {
+			symbols = symbols.concat(_.split(symbolString, ""));
+			eelt.value = symbolString;
+		}
+		if (collections.hasOwnProperty(collection)) {
+			symbols = symbols.concat(_.split(collections[collection],""));
+			celt.value = collection;
+		}
+		if (words != null) {
+			var wordlist = words.trim().split(/\s*,\s*/)
+			symbols = symbols.concat(wordlist);
+			welt.value = words;
+		}
+		var ndice = urlParams.get('number');
+		if (ndice == null || ndice > symbols.length) ndice = symbols.length;
+		nelt.value = ndice;
+		setDice(symbols,ndice);
+		var ctrls = document.getElementById("controls");
+		ctrls.classList.remove("invisible");
+		var reload = document.getElementById("reload");
+		reload.addEventListener("click", function(e) {btnAnimate(e.target); setDice(symbols, ndice)});
+		var edit = document.getElementById("edit");
+		edit.addEventListener("click", function(e) {btnAnimate(e.target); editDice(symbols, ndice)});
     }
-}
 
-function paramToList(s) {
-    var symbols = s.split("--");
-    var list = [];
-    var symbol;
-    for (var i = 0; i < symbols.length; i++) {
-	symbol = symbols[i].split("-");
-	symbol = symbol.map(function(c) {return String.fromCodePoint(parseInt(c,16))});
-	list.push(symbol.join(""));
-    }
-    return list;
 }
 
 function btnAnimate(btn) {
@@ -51,12 +63,14 @@ function btnAnimate(btn) {
 }
 
 function editDice(symbols, ndice) {
+/*
     var emoji = document.getElementById("symbols");
     var ndicediv = document.getElementById("ndice");
     var collection = document.getElementById("collection");
     collection.value = "none";
     ndicediv.value = ndice;
     emoji.value = symbols.join("");
+	*/
     var gendiv = document.getElementById("generate");
     gendiv.classList.remove("invisible");
     var genbtn = document.getElementById("generatebtn");
@@ -99,26 +113,24 @@ function generateUrl() {
     var emoji = document.getElementById("symbols");
     var ndice = document.getElementById("ndice");
     var collection = document.getElementById("collection");
-    var qs = "?";
-    qs += "number=" + ndice.value;
-    var estring = emoji.value;
-    if (collection.value != "none") {
-	qs += "&collection=" + collection.value;
-    } 
-    if (estring != "") {
-	qs += "&symbols=";
-	var symbols = _.split(emoji.value, "");
-	var symbol;
-	var codepts = [];
-	for (var i = 0; i < symbols.length; i++) {
-	    symbol = [];
-	    for (let cp of symbols[i]) {		
-		symbol.push(cp.codePointAt(0).toString(16));
-	    }
-	    codepts.push(symbol.join("-"));
+	var words = document.getElementById("words");
+	var qs;
+	if (window.location.protocol == "file:")
+	{
+		qs = "#stuff&";
+	} else {
+		qs = "?";
 	}
-	qs += codepts.join("--");
+    qs += "number=" + ndice.value;
+    if (collection.value != "none") {
+		qs += "&collection=" + collection.value;
     }
+    if (emoji.value != "") {
+		qs += "&symbols=" + encodeURIComponent(emoji.value);
+    }
+	if (words.value != "") {
+		qs += "&words=" + encodeURIComponent(words.value);
+	}
     var urlsp = document.getElementById("url");
     urlsp.setAttribute("href", window.location.pathname + qs);
     urlsp.innerHTML = window.location.pathname + qs;
