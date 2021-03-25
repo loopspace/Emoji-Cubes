@@ -3,6 +3,13 @@ const collections = {
     faces: "😀😁😂🤣😃😄😅😆😉😊😋😎😍😘🥰😗😙😚☺🙂🤗🤩🤔🤨😐😑😶🙄😏😣😥😮🤐😯😪😫🥱😴😌😛😜😝🤤😒😓😔🙃😲☹🙁😖😞😤😢😭😦😧😩🤯😬😰😱🥵🥶😳🤪🥴😠🤬😷🤕🤢🤮🤧😇🥳🤠🤡🤫🤭🧐🤓",
 };
 
+let promise = Promise.resolve();
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+
 function init() {
 	var urlParams;
 	if (window.location.protocol == "file:") {
@@ -26,6 +33,8 @@ function init() {
 	) {
 		var gendiv = document.getElementById("generate");
 		gendiv.classList.remove("invisible");
+		var ctnr = document.getElementById("container");
+		ctnr.classList.add("invisible");
 		var genbtn = document.getElementById("generatebtn");
 		genbtn.addEventListener("click", generateUrl);
     } else {
@@ -77,21 +86,33 @@ function editDice(symbols, ndice) {
     genbtn.addEventListener("click", generateUrl);
     var ctrls = document.getElementById("controls");
     ctrls.classList.add("invisible");
+	var ctnr = document.getElementById("container");
+	ctnr.classList.add("invisible");
     var dicediv = document.getElementById("dicediv");
     dicediv.innerHTML = '';
 }
 
 function setDice(listOfSymbols, ndice) {
+	promise = promise.then( () => MathJax.typesetPromise(
+		setDiceAux(listOfSymbols, ndice)
+		)).catch( (err) => console.log('Typeset failed: ' + err.message));
+	return promise;
+}
+
+function setDiceAux(listOfSymbols, ndice) {
     var dicediv = document.getElementById("dicediv");
     dicediv.innerHTML = '';
-    var dice, dspan, etext, ucode;
+	MathJax.typesetClear();
+    var dice, dspan, etext, ucode, delts;
     symbols = shuffle(listOfSymbols);
     var emoji, rn;
+	delts = [];
     for (var i = 0; i < ndice; i++) {
 	dice = document.createElement("div");
 	dspan = document.createElement("span");
 	etext = document.createTextNode(symbols[i]);
 	dspan.append(etext);
+	delts.push(dspan);
 	dice.append(dspan);
 	dice.classList.add("dice");
 	rn = Math.random();
@@ -107,6 +128,7 @@ function setDice(listOfSymbols, ndice) {
 	dice.classList.add("diceAnimate");
 	dicediv.append(dice);
     }
+	return delts;
 }
 
 function generateUrl() {

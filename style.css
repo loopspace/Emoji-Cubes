@@ -60,6 +60,22 @@ to {transform: scale(1) rotate(0);}
 #container {
 display: flex;
 justify-content: center;
+box-sizing: border-box;
+height: 100%;
+}
+
+html {
+height: 100vh;
+}
+
+body {
+box-sizing: border-box;
+height: 100vh;
+margin: 0;
+}
+
+body {
+padding: 2ex;
 }
 
 #dicediv {
@@ -106,8 +122,8 @@ animation: 1s controlAnimate;
 }
 
 #generate {
-/*    font-size: 150%; */
-    padding: 1em;
+/*	font-size: 150%; */
+padding: 1em;
 	}
 
 
