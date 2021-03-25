@@ -4,7 +4,7 @@
 <title>Emoji Dice</title>
 <script type="text/javascript" id="MathJax-script" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.1.2/es5/tex-chtml.min.js">
-  </script>
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js" integrity="sha512-90vH1Z83AJY9DmlWa8WkjkV79yfS2n2Oxhsi2dZbIv0nC4E6m5AbH8Nh156kkM7JePmqD6tcZsfad1ueoaovww==" crossorigin="anonymous"></script>
 <script src="dice.js"></script>
 <link href="style.css" media="all" rel="stylesheet" type="text/css">
@@ -20,11 +20,18 @@
 </div>
 <div id="generate" class="invisible">
 <h2>Instructions</h2>
-<p>This webpage makes a reusable set of "story dice".
-You configure the dice using the form below.
-There are some pre-defined <em>collections</em> of symbols to choose from (can be <code>none</code>) to which you can add additional symbols or longer words or phrases.
-The symbols in the first input box are split into individual characters (hopefully it gets multi-part emoji correct!), whereas in the second box the text is split by commas.
-Then choose the number of dice and click on the <code>generate URL</code> button to get a re-usable URL for your dice.
+<p>This webpage makes a reusable set of "story dice".  You configure
+the dice using the form below.  There are some
+pre-defined <em>collections</em> of symbols to choose from (can
+be <code>none</code>) to which you can add additional symbols or
+longer words or phrases.  The symbols in the first input box are split
+into individual characters (hopefully it gets multi-part emoji
+correct!), whereas in the second box the text is split by commas.  In
+the second box, any text between dollar signs is interpreted as an
+equation, so <code>$x^2 + y^2 = z^2</code> will appear
+as <span class="math">$x^2 + y^2 + z^2$</span>.  Then choose the
+number of dice and click on the <code>generate URL</code> button to
+get a re-usable URL for your dice.
 </p>
 <p>After clicking on the link you can click on the &#x1F589; icon to get back to this page with the form filled in with that set of dice for editing.</p>
 <p>(<em>On a Windows machine, press the Windows key and <code>.</code> to get an emoji picker</em>)</p>

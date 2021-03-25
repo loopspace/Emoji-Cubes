@@ -64,25 +64,12 @@ box-sizing: border-box;
 height: 100%;
 }
 
-html {
-height: 100vh;
-}
-
-body {
-box-sizing: border-box;
-height: 100vh;
-margin: 0;
-}
-
-body {
-padding: 2ex;
-}
 
 #dicediv {
 display: flex;
 flex-wrap: wrap;
 justify-content: center;
-overflow: hidden;
+overflow: visible;
 }
 
 #controls {
