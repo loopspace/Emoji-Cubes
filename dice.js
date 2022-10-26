@@ -10,6 +10,33 @@ window.MathJax = {
   },
 };
 
+// https://stackoverflow.com/q/14644558/315213
+function loadScript(scriptUrl) {
+  const script = document.createElement('script');
+  script.src = scriptUrl;
+  document.body.appendChild(script);
+  
+  return new Promise((res, rej) => {
+    script.onload = function() {
+      res();
+    }
+    script.onerror = function () {
+      rej();
+    }
+  });
+}
+
+function loadMJ() {
+    loadScript('https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.1.2/es5/tex-chtml.min.js')
+	.then(() => {
+	    init();
+	})
+	.catch(() => {
+
+	});
+}
+
+window.addEventListener("load", loadMJ);
 
 function init() {
     var urlParams;
@@ -161,7 +188,6 @@ function generateUrl() {
     urlsp.innerHTML = window.location.pathname + qs;
 }
 
-window.addEventListener("load", init);
 
 function shuffle(b) {
     var a = [];
@@ -169,8 +195,8 @@ function shuffle(b) {
 	a.push(b[i]);
     }
     var j;
-    for (var i = a.length - 1; i > 0; i--) {
-	j = Math.floor(Math.random()*i);
+    for (var i = a.length - 1; i >= 0; i--) {
+	j = Math.floor(Math.random()*(i+1));
 	if (i != j) {
 	    [a[i], a[j]] = [a[j], a[i]];
 	}
